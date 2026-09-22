@@ -11,3 +11,66 @@ stages:
       hash: md5
       md5: 224b71f0937f50fff76ba6520ff6bd25
       size: 563
+  preprocess:
+    cmd: python src/data/preprocess_data.py
+    deps:
+    - path: data/raw/customer_data.csv
+      hash: md5
+      md5: ac59c4ce555d3aa7fb606e17be859aab
+      size: 4204
+    - path: src/data/preprocess_data.py
+      hash: md5
+      md5: e225ebe3613946ebd96d6fc70159d79c
+      size: 710
+    outs:
+    - path: data/processed/customer_data_processed.csv
+      hash: md5
+      md5: 287db6d86ea6104d69c812e85f3e5b04
+      size: 2879
+  features:
+    cmd: python src/features/feature_engineering.py
+    deps:
+    - path: data/processed/customer_data_processed.csv
+      hash: md5
+      md5: 287db6d86ea6104d69c812e85f3e5b04
+      size: 2879
+    - path: src/features/feature_engineering.py
+      hash: md5
+      md5: cf545fc0cc361c727ca61623dbcef828
+      size: 762
+    outs:
+    - path: data/processed/segmentation_data.csv
+      hash: md5
+      md5: 2041265ba03eb54f71b7781564a740ac
+      size: 2047
+  train:
+    cmd: python src/models/train_kmeans.py
+    deps:
+    - path: data/processed/segmentation_data.csv
+      hash: md5
+      md5: 2041265ba03eb54f71b7781564a740ac
+      size: 2047
+    - path: src/models/train_kmeans.py
+      hash: md5
+      md5: 9a7c5181a5f52bb1e5985e505503c5b9
+      size: 1785
+    outs:
+    - path: data/processed/customer_segments.csv
+      hash: md5
+      md5: 64b2a8bf72d94ddb05a1e376223d6fbf
+      size: 2455
+    - path: models/kmeans_model.pkl
+      hash: md5
+      md5: 2bd570fd6f82a2bd0916505c102cb392
+      size: 1959
+  evaluate:
+    cmd: python src/models/evaluate_clusters.py
+    deps:
+    - path: data/processed/customer_segments.csv
+      hash: md5
+      md5: 64b2a8bf72d94ddb05a1e376223d6fbf
+      size: 2455
+    - path: src/models/evaluate_clusters.py
+      hash: md5
+      md5: e5d318ccdc65566bbce3af55c39faad3
+      size: 660
