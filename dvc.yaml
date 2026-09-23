@@ -36,3 +36,9 @@ stages:
     deps:
       - data/processed/customer_segments.csv
       - src/models/evaluate_clusters.py
+
+  monitor:
+    cmd: python src/monitoring/data_drift.py
+    deps:
+      - data/processed/segmentation_data.csv
+      - src/monitoring/data_drift.py
